@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Expense Traker App</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap");
+
+:root {
+  --bg: none;
+  --text: #57c4df);
+  --line: #b0efff;
+  --last: #b0efff;
+  --box-shadow: 0 1px 5px rgba(250, 250, 250, 0.2),
+    0 1px 5px rgba(255, 255, 255, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Gotham Light";
+  background-color: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-height: 100vh;
+}
+.container {
+  margin: 30px auto;
+  width: 350px;
+  color: #3698b0;
+}
+h1 {
+  letter-spacing: 1px;
+  margin: 0;
+  color: #57c4df;
+}
+h3 {
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  margin: 40px 0 10px;
+  color: #57c4df;
+}
+h4 {
+  margin: 0;
+  text-transform: uppercase;
+  color: #3698b0;
+}
+p {
+  color: var(--bg);
+  font-weight: bold;
+  color: #3698b0;
+
+}
+.inc-exp-container {
+  background-color: var(--line);
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+.inc-exp-container > div {
+  flex: 1;
+  text-align: center;
+}
+.inc-exp-container > div:first-of-type {
+  border-right: 1px solid var(--last);
+}
+.money {
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 5px 0;
+  color: #57c4df;
+}
+.money.plus {
+  color: forestgreen;
+}
+.money.minus {
+  color: crimson;
+}
+label {
+  display: inline-block;
+  margin: 10px 0;
+  font-size: large;
+  font-weight: bold;
+  text-decoration: none;
+  color: #57c4df;
+}
+input[type="text"],
+input[type="number"] {
+  border: 1px solid var(--last);
+  border-radius: 5px;
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+.btn {
+  cursor: pointer;
+  background-color: var(--line);
+  color: var(--bg);
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0 30px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  transition: 0.5s ease-in;
+}
+.btn:focus,
+.delete-btn:focus {
+  outline: none;
+}
+
+.btn:hover{
+      color: white;
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px 0 30px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      background-color: #2cd5ff;
+      border-radius: 20px;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 40px;
+  color: #57c4df;
+}
+.list li {
+  background-color: var(--text);
+  color: #57c4df;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+}
+.list li.plus {
+  border-right: 5px solid forestgreen;
+}
+.list li.minus {
+  border-right: 5px solid crimson;
+}
+.delete-btn {
+  cursor: pointer;
+  background-color: var(--line);
+  border: 0;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 2px 5px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-100%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+.list li:hover .delete-btn {
+  opacity: 1;
+}
+
+  </style>
+
+  <body>
+    <div class="container">
+      <h4>Your balance</h4>
+      <h1 id="balance">$0.0</h1>
+      <div class="inc-exp-container">
+        <div>
+          <h4>income</h4>
+          <p id="money-plus" class="money plus">+$0.00</p>
+        </div>
+        <div>
+          <h4>expense</h4>
+          <p id="money-minus" class="money minus">-$0.00</p>
+        </div>
+      </div>
+      <h3>Transaction List</h3>
+      <ul id="list" class="list">
+        
+      </ul>
+      <h3>add new transation</h3>
+      <form action="" id="form">
+        <div class="form-control">
+          <label for="text">Description</label>
+          <input type="text" id="text" placeholder="please enter the text..." />
+        </div>
+        <div class="form-control">
+          <label for="amount"
+            >amount <br />(negtive=expense,positive=income)</label
+          >
+          <input
+            type="number"
+            id="amount"
+            placeholder="please enter the amount..."
+          />
+        </div>
+        <button class="btn">Add transation</button>
+      </form>
+    </div>
+
+    <script>
+      const balance = document.getElementById("balance");
+      const money_plus = document.getElementById("money-plus");
+      const list = document.getElementById("list");
+      const form = document.getElementById("form");
+      const text = document.getElementById("text");
+      const amount = document.getElementById("amount");
+      const money_minus = document.getElementById("money-minus");
+
+      // const randomTransations=[
+      //     {id:1,text:'salary',amount:400},
+      //     {id:2,text:'books',amount:-50},
+      //     {id:3,text:'paper',amount:-20},
+      //     {id:4,text:'food',amount:-100},
+      // ]
+      const localStorageTransations = JSON.parse(localStorage.getItem("transations"));
+
+      let transations =
+        localStorage.getItem("transations") !== null ? localStorageTransations : [];
+
+      //add transation
+      function addTransation(e) {
+        e.preventDefault();
+        if (text.value.trim() === "" || amount.value.trim() === "") {
+          text.placeholder = "please add a text";
+          text.style.backgroundColor = "#ccc";
+          amount.placeholder = "please add amount";
+          amount.style.backgroundColor = "#ccc";
+        } else {
+          const transation = {
+            id: genenrateID(),
+            text: text.value,
+            amount: +amount.value,
+          };
+          transations.push(transation);
+          addTransationDOM(transation);
+          updateValues();
+          updateLocalStorage();
+          text.value = "";
+          amount.value = "";
+        }
+      }
+      //generate id
+      function genenrateID() {
+        return Math.floor(Math.random() * 100000000);
+      }
+
+      //add transations to dom list
+      function addTransationDOM(transation) {
+        //get sign
+        const sign = transation.amount < 0 ? "-" : "+";
+        const item = document.createElement("li");
+        //add class based on value
+        item.classList.add(transation.amount < 0 ? "minus" : "plus");
+        item.innerHTML = `${transation.text} <span>${sign}${Math.abs(
+          transation.amount
+        )}</span> <button class="delete-btn" onclick="removeTransation(${
+          transation.id
+        })">x</button>`;
+        list.appendChild(item);
+      }
+      //update the balance
+      function updateValues() {
+        const amounts = transations.map((transation) => transation.amount);
+        const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+        const income = amounts
+          .filter((item) => item > 0)
+          .reduce((acc, item) => (acc += item), 0)
+          .toFixed(2);
+        const expense = (
+          amounts.filter((item) => item < 0).reduce((acc, item) => (acc += item), 0) *
+          -1
+        ).toFixed(2);
+
+        balance.innerText = `$${total}`;
+        money_plus.innerText = `$${income}`;
+        money_minus.innerText = `$${expense}`;
+      }
+      //remove
+      function removeTransation(id) {
+        transations = transations.filter((transation) => transation.id !== id);
+        updateLocalStorage();
+        init();
+      }
+
+      //updatelocal storage
+      function updateLocalStorage() {
+        localStorage.setItem("transations", JSON.stringify(transations));
+      }
+
+      //init
+      function init() {
+        list.innerHTML = "";
+        transations.forEach(addTransationDOM);
+        updateValues();
+      }
+      init();
+
+      form.addEventListener("submit", addTransation);
+
+    </script>
+  </body>
+</html>
